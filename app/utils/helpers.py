@@ -7,13 +7,15 @@
 #class representing an entry for a past trade in a user's trade history
 #   stockName is a string
 #   stockPrice is a number
+#   stockGrowth is a number representing how much the stock's growth percentage at time of trade
 #   sharesTraded is a number
 #   totalCost is a number
 #   timeMade is the time and date at which the trade was carried out
 class pastTrade:
-    def __init__ (self, stockName, stockPrice, sharesTraded, totalCost, timeMade):
+    def __init__ (self, stockName, stockPrice, stockGrowth, sharesTraded, totalCost, timeMade):
         self.stockName = stockName
         self.stockPrice = stockPrice
+        self.stockGrowth = stockGrowth
         self.sharesTraded = sharesTraded
         self.totalCost = totalCost
         self.timeMade = timeMade
