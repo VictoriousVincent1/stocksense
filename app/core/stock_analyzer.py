@@ -40,7 +40,9 @@ class StockAnalyzer:
         """Predicts the next stock movement."""
         df = self.fetcher.fetch_historical(period="1mo", interval="1d")
         df = DataCleaner.clean(df)
+        self.predictor.train_model(df)
         latest = df[["Open", "High", "Low", "Close", "Volume"]].iloc[[-1]]
+
 
         prediction = self.predictor.predict_next(latest)
         return prediction
