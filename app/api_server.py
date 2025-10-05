@@ -91,12 +91,12 @@ def analyze_sentiment():
         results = []
         for ticker in tickers:
             analyzer = StockAnalyzer(ticker)
-            articles = (
-                NewsAPI().fetch_news(ticker)
-                + BloombergNews().fetch_news(ticker)
-                + ReutersNews().fetch_news(ticker)
-            )
-            
+            #articles = (
+            #    NewsAPI().fetch_news(ticker)
+                #+ BloombergNews().fetch_news(ticker)
+                #+ ReutersNews().fetch_news(ticker)
+            #)
+            articles = NewsAPI().fetch_news(ticker)
             sentiment_results = analyzer.analyze_sentiment(articles)
             
             avg_sentiment = sum(sentiment_results.values()) / len(sentiment_results) if sentiment_results else 0

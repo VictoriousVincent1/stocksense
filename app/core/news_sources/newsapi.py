@@ -9,11 +9,14 @@ class NewsAPI:
             cache_ttl=300
         )
 
-        articles = client.search(f"{ticker} stocks", when="7d", max_results = 3)
+        articles = client.search(f"{ticker} stocks", when="7d", max_results = 5)
+
+        results = []
+        #results = ""
 
         for article in articles:
-            return [f"{article['title']}"]
+            results.append(f"{article['title']}")
         #for topic in news.items:
-
+        return results
         #    return article.title
         #return [f"{ticker} hits record high!", f"{ticker} faces market challenges"]
