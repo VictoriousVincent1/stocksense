@@ -25,26 +25,6 @@ StockSense AI is a modern, interactive web platform for AI-driven stock predicti
 
 ---
 
-## 📦 Requirements
-
-All dependencies are listed in `requirements.txt`:
-
----
-Flask==3.0.0
-Flask-SQLAlchemy==3.1.1
-Flask-Login==0.6.3
-Werkzeug==3.0.1
-python-dotenv==1.0.0
-python-dotenv>=0.19.2
-authlib>=1.0
-requests>=2.27.1
-yfinance>=0.2.28
-pandas>=1.3.5
-scikit-learn>=1.0
-matplotlib>=3.5.0
-flask-cors>=4.0.0
----
-
 ## Getting Started
 
 1. Clone this repository.
