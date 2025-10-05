@@ -145,44 +145,52 @@ def run_backtest():
 
 @app.route('/api/portfolio/buy', methods=['POST'])
 def portfolio_buy():
-    """Buy stocks."""
+    """Buy stocks at market price only."""
     try:
         data = request.json
         ticker = data.get('ticker')
-        price = data.get('price')
         shares = data.get('shares')
-        
-        message = portfolio.buy(ticker, price, shares)
-        
+
+        analyzer = StockAnalyzer(ticker)
+        df, _ = analyzer.analyze()
+        market_price = float(df['Close'].iloc[-1])  # latest price
+
+        message = portfolio.buy(ticker, market_price, shares)
+
         return jsonify({
             'success': True,
             'message': message,
+            'executed_price': market_price,
             'balance': round(portfolio.balance, 2),
             'holdings': portfolio.holdings
         })
-    
+
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 400
 
 
 @app.route('/api/portfolio/sell', methods=['POST'])
 def portfolio_sell():
-    """Sell stocks."""
+    """Sell stocks at market price only."""
     try:
         data = request.json
         ticker = data.get('ticker')
-        price = data.get('price')
         shares = data.get('shares')
-        
-        message = portfolio.sell(ticker, price, shares)
-        
+
+        analyzer = StockAnalyzer(ticker)
+        df, _ = analyzer.analyze()
+        market_price = float(df['Close'].iloc[-1])  # latest price
+
+        message = portfolio.sell(ticker, market_price, shares)
+
         return jsonify({
             'success': True,
             'message': message,
+            'executed_price': market_price,
             'balance': round(portfolio.balance, 2),
             'holdings': portfolio.holdings
         })
-    
+
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 400
 
