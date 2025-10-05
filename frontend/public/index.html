@@ -4,299 +4,600 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>StockSense - Charts</title>
+  <title>StockSense AI - Advanced Stock Analysis</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
-<body class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 min-h-screen p-6">
-  <div class="max-w-7xl mx-auto space-y-6">
+<body class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 min-h-screen">
 
-    <!-- Header Section -->
-    <div class="bg-gray-800 rounded-2xl p-6 shadow-xl border border-gray-700">
-      <div class="flex items-start justify-between">
-        <div>
-          <h1 class="text-4xl font-bold text-white mb-2">AAPL</h1>
-          <p class="text-gray-400">Apple Inc.</p>
-        </div>
-        <div class="text-right">
-          <div class="text-4xl font-bold text-white" id="currentPrice">$155.23</div>
-          <div class="flex items-center justify-end gap-2 mt-2 text-green-400" id="priceChange">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
-              <polyline points="17 6 23 6 23 12"></polyline>
-            </svg>
-            <span class="text-lg font-semibold">+5.23 (+3.48%)</span>
+  <!-- Navigation -->
+  <nav class="bg-gray-800 border-b border-gray-700">
+    <div class="max-w-7xl mx-auto px-6 py-4">
+      <div class="flex items-center justify-between">
+        <h1 class="text-3xl font-bold text-white">📈 StockSense AI</h1>
+        <div class="flex items-center gap-4">
+          <div class="text-gray-400">Balance: <span id="navBalance" class="text-green-400 font-bold">$5,000.00</span>
           </div>
         </div>
       </div>
     </div>
+  </nav>
 
-    <!-- Metrics Grid -->
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-      <div class="bg-gray-800 rounded-xl p-4 border border-gray-700 hover:border-gray-600 transition-all">
-        <div class="text-gray-400 text-sm mb-2">Open</div>
-        <div class="text-white text-xl font-bold">$150.23</div>
-      </div>
-      <div class="bg-gray-800 rounded-xl p-4 border border-gray-700 hover:border-gray-600 transition-all">
-        <div class="text-gray-400 text-sm mb-2">High</div>
-        <div class="text-white text-xl font-bold">$165.89</div>
-      </div>
-      <div class="bg-gray-800 rounded-xl p-4 border border-gray-700 hover:border-gray-600 transition-all">
-        <div class="text-gray-400 text-sm mb-2">Low</div>
-        <div class="text-white text-xl font-bold">$148.12</div>
-      </div>
-      <div class="bg-gray-800 rounded-xl p-4 border border-gray-700 hover:border-gray-600 transition-all">
-        <div class="text-gray-400 text-sm mb-2">Volume</div>
-        <div class="text-white text-xl font-bold">2.3M</div>
-      </div>
-      <div class="bg-gray-800 rounded-xl p-4 border border-gray-700 hover:border-gray-600 transition-all">
-        <div class="text-gray-400 text-sm mb-2">Market Cap</div>
-        <div class="text-white text-xl font-bold">$2.1T</div>
-      </div>
-      <div class="bg-gray-800 rounded-xl p-4 border border-gray-700 hover:border-gray-600 transition-all">
-        <div class="text-gray-400 text-sm mb-2">P/E Ratio</div>
-        <div class="text-white text-xl font-bold">28.5</div>
+  <div class="max-w-7xl mx-auto px-6 py-6 space-y-6">
+
+    <!-- Ticker Input & Action Buttons -->
+    <div class="bg-gray-800 rounded-2xl p-6 shadow-xl border border-gray-700">
+      <div class="flex flex-col gap-4">
+        <div class="flex items-center gap-4">
+          <label class="text-white font-semibold min-w-fit">Enter Tickers:</label>
+          <input type="text" id="tickerInput"
+            class="flex-1 px-4 py-3 bg-gray-900 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-all"
+            placeholder="e.g., AAPL, NVDA, AMZN, GOOGL" value="AAPL,NVDA,AMZN,GOOGL">
+        </div>
+
+        <div class="flex flex-wrap gap-3">
+          <button onclick="runFullAnalysis()"
+            class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-all transform hover:scale-105">
+            📊 Full Analysis
+          </button>
+          <button onclick="runPrediction()"
+            class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-all transform hover:scale-105">
+            🔮 Predict Movement
+          </button>
+          <button onclick="runSentiment()"
+            class="px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white font-semibold rounded-lg transition-all transform hover:scale-105">
+            📰 News Sentiment
+          </button>
+          <button onclick="runBacktest()"
+            class="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-all transform hover:scale-105">
+            ⏪ Backtest Strategy
+          </button>
+        </div>
       </div>
     </div>
 
-    <!-- Chart Controls and Display -->
+    <!-- Portfolio Manager -->
     <div class="bg-gray-800 rounded-2xl p-6 shadow-xl border border-gray-700">
-      <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
-        <!-- Timeframe Selector -->
-        <div class="flex gap-2">
-          <button onclick="changeTimeframe('1D')"
-            class="timeframe-btn px-4 py-2 rounded-lg font-semibold bg-blue-600 text-white"
-            data-timeframe="1D">1D</button>
-          <button onclick="changeTimeframe('1W')"
-            class="timeframe-btn px-4 py-2 rounded-lg font-semibold bg-gray-700 text-gray-300 hover:bg-gray-600"
-            data-timeframe="1W">1W</button>
-          <button onclick="changeTimeframe('1M')"
-            class="timeframe-btn px-4 py-2 rounded-lg font-semibold bg-gray-700 text-gray-300 hover:bg-gray-600"
-            data-timeframe="1M">1M</button>
-          <button onclick="changeTimeframe('1Y')"
-            class="timeframe-btn px-4 py-2 rounded-lg font-semibold bg-gray-700 text-gray-300 hover:bg-gray-600"
-            data-timeframe="1Y">1Y</button>
-        </div>
+      <h2 class="text-2xl font-bold text-white mb-4">💼 Portfolio Manager</h2>
 
-        <!-- Chart Type Selector -->
-        <div class="flex gap-2">
-          <button onclick="changeChartType('line')"
-            class="chart-type-btn px-4 py-2 rounded-lg font-semibold bg-green-600 text-white"
-            data-type="line">Line</button>
-          <button onclick="changeChartType('bar')"
-            class="chart-type-btn px-4 py-2 rounded-lg font-semibold bg-gray-700 text-gray-300 hover:bg-gray-600"
-            data-type="bar">Bar</button>
-          <button onclick="changeChartType('area')"
-            class="chart-type-btn px-4 py-2 rounded-lg font-semibold bg-gray-700 text-gray-300 hover:bg-gray-600"
-            data-type="area">Area</button>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+        <div class="bg-gray-900 rounded-xl p-4 border border-gray-700">
+          <div class="text-gray-400 text-sm mb-1">Current Balance</div>
+          <div class="text-3xl font-bold text-green-400" id="portfolioBalance">$5,000.00</div>
+        </div>
+        <div class="bg-gray-900 rounded-xl p-4 border border-gray-700">
+          <div class="text-gray-400 text-sm mb-1">Holdings</div>
+          <div id="portfolioHoldings" class="text-white">
+            <span class="text-gray-500">No holdings yet</span>
+          </div>
         </div>
       </div>
 
-      <!-- Price Chart -->
-      <div class="bg-gray-900 rounded-xl p-4">
-        <canvas id="priceChart" height="100"></canvas>
+      <div class="flex flex-wrap gap-3 items-end">
+        <div class="flex-1 min-w-[120px]">
+          <label class="text-gray-400 text-sm mb-1 block">Ticker</label>
+          <input type="text" id="portfolioTicker"
+            class="w-full px-4 py-2 bg-gray-900 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
+            placeholder="AAPL">
+        </div>
+        <div class="flex-1 min-w-[120px]">
+          <label class="text-gray-400 text-sm mb-1 block">Price</label>
+          <input type="number" id="portfolioPrice" step="0.01"
+            class="w-full px-4 py-2 bg-gray-900 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
+            placeholder="150.00">
+        </div>
+        <div class="flex-1 min-w-[120px]">
+          <label class="text-gray-400 text-sm mb-1 block">Shares</label>
+          <input type="number" id="portfolioShares" min="1" value="1"
+            class="w-full px-4 py-2 bg-gray-900 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
+            placeholder="1">
+        </div>
+        <button onclick="buyStock()"
+          class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-all">
+          Buy
+        </button>
+        <button onclick="sellStock()"
+          class="px-6 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-all">
+          Sell
+        </button>
       </div>
     </div>
 
-    <!-- Volume Chart -->
-    <div class="bg-gray-800 rounded-2xl p-6 shadow-xl border border-gray-700">
-      <h3 class="text-xl font-bold text-white mb-4">Trading Volume</h3>
-      <div class="bg-gray-900 rounded-xl p-4">
-        <canvas id="volumeChart" height="60"></canvas>
+    <!-- Loading Indicator -->
+    <div id="loading" class="hidden">
+      <div class="bg-gray-800 rounded-2xl p-12 shadow-xl border border-gray-700 text-center">
+        <div
+          class="inline-block w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4">
+        </div>
+        <p class="text-white text-lg">Analyzing stocks...</p>
       </div>
     </div>
 
+    <!-- Results Container -->
+    <div id="results" class="grid grid-cols-1 lg:grid-cols-2 gap-6"></div>
   </div>
 
   <script>
-    let currentTimeframe = '1D';
-    let currentChartType = 'line';
-    let priceChart, volumeChart;
+    const API_URL = 'http://localhost:5000/api';
+    let currentCharts = {};
 
-    // Mock data generator
-    const mockData = {
-      '1D': {
-        labels: Array.from({ length: 24 }, (_, i) => `${i}:00`),
-        prices: Array.from({ length: 24 }, () => 150 + Math.random() * 10)
-      },
-      '1W': {
-        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-        prices: Array.from({ length: 7 }, () => 150 + Math.random() * 15)
-      },
-      '1M': {
-        labels: Array.from({ length: 30 }, (_, i) => `Day ${i + 1}`),
-        prices: Array.from({ length: 30 }, () => 150 + Math.random() * 25)
-      },
-      '1Y': {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        prices: Array.from({ length: 12 }, () => 150 + Math.random() * 50)
+    function getTickers() {
+      return document.getElementById('tickerInput').value
+        .split(',')
+        .map(t => t.trim().toUpperCase())
+        .filter(t => t.length > 0);
+    }
+
+    function showLoading() {
+      document.getElementById('loading').classList.remove('hidden');
+      document.getElementById('results').innerHTML = '';
+    }
+
+    function hideLoading() {
+      document.getElementById('loading').classList.add('hidden');
+    }
+
+    function showError(message) {
+      hideLoading();
+      document.getElementById('results').innerHTML =
+        `<div class="col-span-full bg-red-900 border border-red-700 rounded-2xl p-6 text-white">
+                    <div class="flex items-center gap-3">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <div>
+                            <div class="font-bold">Error</div>
+                            <div class="text-red-200">${message}</div>
+                        </div>
+                    </div>
+                </div>`;
+    }
+
+    async function runFullAnalysis() {
+      const tickers = getTickers();
+      if (tickers.length === 0) {
+        showError('Please enter at least one ticker symbol');
+        return;
       }
-    };
 
-    function createPriceChart() {
-      const ctx = document.getElementById('priceChart').getContext('2d');
-      const data = mockData[currentTimeframe];
+      showLoading();
+      try {
+        const response = await fetch(`${API_URL}/analyze`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tickers })
+        });
 
-      if (priceChart) {
-        priceChart.destroy();
+        const data = await response.json();
+        hideLoading();
+
+        if (data.success) {
+          displayAnalysisResults(data.data);
+        } else {
+          showError(data.error);
+        }
+      } catch (error) {
+        showError(error.message);
+      }
+    }
+
+    function displayAnalysisResults(results) {
+      const container = document.getElementById('results');
+      container.innerHTML = '';
+
+      results.forEach(result => {
+        const card = document.createElement('div');
+        card.className = 'bg-gray-800 rounded-2xl p-6 shadow-xl border border-gray-700';
+
+        const isPositive = result.chart_data[result.chart_data.length - 1].Close > result.chart_data[0].Close;
+        const arrow = isPositive ? '↑' : '↓';
+        const changeClass = isPositive ? 'text-green-400' : 'text-red-400';
+
+        card.innerHTML = `
+                    <div class="flex items-start justify-between mb-6">
+                        <div>
+                            <h2 class="text-3xl font-bold text-white mb-1">${result.ticker}</h2>
+                            <p class="text-gray-400">ML Accuracy: ${(result.accuracy * 100).toFixed(2)}%</p>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-3xl font-bold text-white">$${result.latest_price.toFixed(2)}</div>
+                            <div class="${changeClass} text-lg font-semibold mt-1">${arrow}</div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-4 mb-6">
+                        <div class="bg-gray-900 rounded-xl p-3 border border-gray-700">
+                            <div class="text-gray-400 text-xs mb-1">RSI (14)</div>
+                            <div class="text-white text-lg font-bold">${result.rsi ? result.rsi.toFixed(2) : 'N/A'}</div>
+                        </div>
+                        <div class="bg-gray-900 rounded-xl p-3 border border-gray-700">
+                            <div class="text-gray-400 text-xs mb-1">SMA (20)</div>
+                            <div class="text-white text-lg font-bold">$${result.sma20 ? result.sma20.toFixed(2) : 'N/A'}</div>
+                        </div>
+                        <div class="bg-gray-900 rounded-xl p-3 border border-gray-700">
+                            <div class="text-gray-400 text-xs mb-1">Date</div>
+                            <div class="text-white text-sm font-bold">${result.latest_date}</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-900 rounded-xl p-4">
+                        <canvas id="chart-${result.ticker}" height="200"></canvas>
+                    </div>
+                `;
+
+        container.appendChild(card);
+        setTimeout(() => createChart(result), 100);
+      });
+    }
+
+    function createChart(result) {
+      const ctx = document.getElementById(`chart-${result.ticker}`);
+      if (!ctx) return;
+
+      if (currentCharts[result.ticker]) {
+        currentCharts[result.ticker].destroy();
       }
 
-      const isPositive = data.prices[data.prices.length - 1] > data.prices[0];
+      const isPositive = result.chart_data[result.chart_data.length - 1].Close > result.chart_data[0].Close;
       const color = isPositive ? '#10B981' : '#EF4444';
 
-      const config = {
-        type: currentChartType,
+      currentCharts[result.ticker] = new Chart(ctx, {
+        type: 'line',
         data: {
-          labels: data.labels,
-          datasets: [{
-            label: 'Price',
-            data: data.prices,
-            borderColor: color,
-            backgroundColor: currentChartType === 'line' ? 'transparent' : color + '80',
-            borderWidth: 3,
-            fill: currentChartType === 'area',
-            tension: 0.4,
-            pointRadius: 0,
-            pointHoverRadius: 6,
-          }]
+          labels: result.chart_data.map(d => d.Date),
+          datasets: [
+            {
+              label: 'Close Price',
+              data: result.chart_data.map(d => d.Close),
+              borderColor: color,
+              backgroundColor: color + '20',
+              borderWidth: 3,
+              fill: true,
+              tension: 0.4,
+              pointRadius: 0,
+              pointHoverRadius: 6
+            },
+            {
+              label: 'SMA (20)',
+              data: result.chart_data.map(d => d.SMA20),
+              borderColor: '#F59E0B',
+              backgroundColor: 'transparent',
+              borderWidth: 2,
+              borderDash: [5, 5],
+              tension: 0.4,
+              pointRadius: 0
+            }
+          ]
         },
         options: {
           responsive: true,
-          maintainAspectRatio: true,
+          maintainAspectRatio: false,
           plugins: {
             legend: {
-              display: false
+              display: true,
+              position: 'top',
+              labels: { color: '#9CA3AF' }
             },
             tooltip: {
               backgroundColor: '#1F2937',
               titleColor: '#fff',
               bodyColor: color,
               borderColor: '#374151',
-              borderWidth: 1,
-              callbacks: {
-                label: (context) => `$${context.parsed.y.toFixed(2)}`
-              }
+              borderWidth: 1
             }
           },
           scales: {
             x: {
-              grid: {
-                color: '#374151',
-                drawBorder: false
-              },
-              ticks: {
-                color: '#9CA3AF'
-              }
+              grid: { color: '#374151', drawBorder: false },
+              ticks: { color: '#9CA3AF', maxTicksLimit: 8 }
             },
             y: {
-              grid: {
-                color: '#374151',
-                drawBorder: false
-              },
+              grid: { color: '#374151', drawBorder: false },
               ticks: {
                 color: '#9CA3AF',
-                callback: (value) => `$${value.toFixed(0)}`
+                callback: value => `$${value.toFixed(0)}`
               }
             }
           }
         }
-      };
-
-      priceChart = new Chart(ctx, config);
+      });
     }
 
-    function createVolumeChart() {
-      const ctx = document.getElementById('volumeChart').getContext('2d');
-      const data = mockData[currentTimeframe];
-      const volumes = data.labels.map(() => Math.floor(Math.random() * 5000000));
-
-      if (volumeChart) {
-        volumeChart.destroy();
+    async function runPrediction() {
+      const tickers = getTickers();
+      if (tickers.length === 0) {
+        showError('Please enter at least one ticker symbol');
+        return;
       }
 
-      volumeChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: data.labels,
-          datasets: [{
-            label: 'Volume',
-            data: volumes,
-            backgroundColor: '#3B82F6',
-            borderRadius: 4,
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: true,
-          plugins: {
-            legend: {
-              display: false
-            },
-            tooltip: {
-              backgroundColor: '#1F2937',
-              titleColor: '#fff',
-              bodyColor: '#3B82F6',
-              borderColor: '#374151',
-              borderWidth: 1,
-              callbacks: {
-                label: (context) => `${(context.parsed.y / 1000000).toFixed(2)}M`
-              }
-            }
-          },
-          scales: {
-            x: {
-              grid: {
-                color: '#374151',
-                drawBorder: false
-              },
-              ticks: {
-                color: '#9CA3AF'
-              }
-            },
-            y: {
-              grid: {
-                color: '#374151',
-                drawBorder: false
-              },
-              ticks: {
-                color: '#9CA3AF',
-                callback: (value) => `${(value / 1000000).toFixed(1)}M`
-              }
-            }
+      showLoading();
+      try {
+        const response = await fetch(`${API_URL}/predict`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tickers })
+        });
+
+        const data = await response.json();
+        hideLoading();
+
+        if (data.success) {
+          displayPredictions(data.data);
+        } else {
+          showError(data.error);
+        }
+      } catch (error) {
+        showError(error.message);
+      }
+    }
+
+    function displayPredictions(results) {
+      const container = document.getElementById('results');
+      container.innerHTML = '';
+
+      results.forEach(result => {
+        const isUp = result.prediction === 'UP';
+        const bgClass = isUp ? 'from-green-900 to-green-800' : 'from-red-900 to-red-800';
+        const icon = isUp ? '📈' : '📉';
+        const textClass = isUp ? 'text-green-400' : 'text-red-400';
+
+        const card = document.createElement('div');
+        card.className = `bg-gradient-to-br ${bgClass} rounded-2xl p-8 shadow-xl border border-gray-700`;
+
+        card.innerHTML = `
+                    <div class="text-center">
+                        <h2 class="text-2xl font-bold text-white mb-4">${result.ticker}</h2>
+                        <div class="text-8xl mb-6">${icon}</div>
+                        <div class="text-5xl font-bold ${textClass} mb-2">${result.prediction}</div>
+                        <div class="text-gray-300">Next Movement Prediction</div>
+                    </div>
+                `;
+
+        container.appendChild(card);
+      });
+    }
+
+    async function runSentiment() {
+      const tickers = getTickers();
+      if (tickers.length === 0) {
+        showError('Please enter at least one ticker symbol');
+        return;
+      }
+
+      showLoading();
+      try {
+        const response = await fetch(`${API_URL}/sentiment`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tickers })
+        });
+
+        const data = await response.json();
+        hideLoading();
+
+        if (data.success) {
+          displaySentiment(data.data);
+        } else {
+          showError(data.error);
+        }
+      } catch (error) {
+        showError(error.message);
+      }
+    }
+
+    function displaySentiment(results) {
+      const container = document.getElementById('results');
+      container.innerHTML = '';
+
+      results.forEach(result => {
+        const sentiment = result.average_sentiment;
+        let sentimentClass = 'text-gray-400';
+        let sentimentLabel = 'Neutral';
+        let bgGradient = 'from-gray-800 to-gray-700';
+
+        if (sentiment > 0.1) {
+          sentimentClass = 'text-green-400';
+          sentimentLabel = 'Positive';
+          bgGradient = 'from-green-900 to-green-800';
+        } else if (sentiment < -0.1) {
+          sentimentClass = 'text-red-400';
+          sentimentLabel = 'Negative';
+          bgGradient = 'from-red-900 to-red-800';
+        }
+
+        const card = document.createElement('div');
+        card.className = `bg-gradient-to-br ${bgGradient} rounded-2xl p-6 shadow-xl border border-gray-700`;
+
+        let articlesHtml = result.articles.map(a => {
+          const scoreClass = a.score > 0 ? 'text-green-400' : a.score < 0 ? 'text-red-400' : 'text-gray-400';
+          return `
+                        <div class="bg-gray-900 bg-opacity-50 rounded-lg p-4 mb-3 border border-gray-700">
+                            <div class="text-white text-sm mb-2">${a.text.substring(0, 120)}...</div>
+                            <div class="${scoreClass} text-xs font-semibold">Sentiment: ${a.score.toFixed(3)}</div>
+                        </div>
+                    `;
+        }).join('');
+
+        card.innerHTML = `
+                    <h2 class="text-2xl font-bold text-white mb-4">${result.ticker}</h2>
+                    
+                    <div class="bg-gray-900 bg-opacity-50 rounded-xl p-4 mb-6 border border-gray-700">
+                        <div class="text-gray-400 text-sm mb-1">Average Sentiment</div>
+                        <div class="text-3xl font-bold ${sentimentClass}">${sentimentLabel}</div>
+                        <div class="text-gray-400 text-sm mt-1">(${sentiment.toFixed(3)})</div>
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-white font-semibold mb-3">Recent Articles</h4>
+                        ${articlesHtml || '<p class="text-gray-500">No articles found</p>'}
+                    </div>
+                `;
+
+        container.appendChild(card);
+      });
+    }
+
+    async function runBacktest() {
+      const tickers = getTickers();
+      if (tickers.length === 0) {
+        showError('Please enter at least one ticker symbol');
+        return;
+      }
+
+      showLoading();
+      try {
+        const response = await fetch(`${API_URL}/backtest`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tickers })
+        });
+
+        const data = await response.json();
+        hideLoading();
+
+        if (data.success) {
+          displayBacktest(data.data);
+        } else {
+          showError(data.error);
+        }
+      } catch (error) {
+        showError(error.message);
+      }
+    }
+
+    function displayBacktest(results) {
+      const container = document.getElementById('results');
+      container.innerHTML = '';
+
+      results.forEach(result => {
+        const isProfit = result.return_pct > 0;
+        const bgClass = isProfit ? 'from-green-900 to-green-800' : 'from-red-900 to-red-800';
+        const profitClass = isProfit ? 'text-green-400' : 'text-red-400';
+        const icon = isProfit ? '💰' : '📉';
+
+        const card = document.createElement('div');
+        card.className = `bg-gradient-to-br ${bgClass} rounded-2xl p-6 shadow-xl border border-gray-700`;
+
+        card.innerHTML = `
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-bold text-white">${result.ticker}</h2>
+                        <div class="text-4xl">${icon}</div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="bg-gray-900 bg-opacity-50 rounded-xl p-4 border border-gray-700">
+                            <div class="text-gray-400 text-sm mb-1">Initial Balance</div>
+                            <div class="text-2xl font-bold text-white">$10,000.00</div>
+                        </div>
+                        
+                        <div class="bg-gray-900 bg-opacity-50 rounded-xl p-4 border border-gray-700">
+                            <div class="text-gray-400 text-sm mb-1">Final Balance</div>
+                            <div class="text-2xl font-bold text-white">$${result.final_balance.toFixed(2)}</div>
+                        </div>
+                        
+                        <div class="bg-gray-900 bg-opacity-50 rounded-xl p-4 border border-gray-700">
+                            <div class="text-gray-400 text-sm mb-1">Total Return</div>
+                            <div class="text-3xl font-bold ${profitClass}">
+                                ${result.return_pct > 0 ? '+' : ''}${result.return_pct.toFixed(2)}%
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+        container.appendChild(card);
+      });
+    }
+
+    async function updatePortfolioStatus() {
+      try {
+        const response = await fetch(`${API_URL}/portfolio/status`);
+        const data = await response.json();
+
+        if (data.success) {
+          const balanceText = `$${data.balance.toFixed(2)}`;
+          document.getElementById('portfolioBalance').textContent = balanceText;
+          document.getElementById('navBalance').textContent = balanceText;
+
+          const holdings = document.getElementById('portfolioHoldings');
+          if (Object.keys(data.holdings).length > 0) {
+            holdings.innerHTML = Object.entries(data.holdings).map(([ticker, shares]) =>
+              `<div class="flex justify-between items-center py-1">
+                                <span class="font-semibold">${ticker}</span>
+                                <span class="text-gray-400">${shares} shares</span>
+                            </div>`
+            ).join('');
+          } else {
+            holdings.innerHTML = '<span class="text-gray-500">No holdings yet</span>';
           }
         }
-      });
+      } catch (error) {
+        console.error('Failed to update portfolio:', error);
+      }
     }
 
-    function changeTimeframe(timeframe) {
-      currentTimeframe = timeframe;
-      document.querySelectorAll('.timeframe-btn').forEach(btn => {
-        if (btn.dataset.timeframe === timeframe) {
-          btn.className = 'timeframe-btn px-4 py-2 rounded-lg font-semibold bg-blue-600 text-white';
+    async function buyStock() {
+      const ticker = document.getElementById('portfolioTicker').value.trim().toUpperCase();
+      const price = parseFloat(document.getElementById('portfolioPrice').value);
+      const shares = parseInt(document.getElementById('portfolioShares').value);
+
+      if (!ticker || !price || !shares) {
+        alert('Please fill in all fields');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_URL}/portfolio/buy`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ticker, price, shares })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          alert('✅ ' + data.message);
+          updatePortfolioStatus();
         } else {
-          btn.className = 'timeframe-btn px-4 py-2 rounded-lg font-semibold bg-gray-700 text-gray-300 hover:bg-gray-600';
+          alert('❌ Error: ' + data.error);
         }
-      });
-      createPriceChart();
-      createVolumeChart();
+      } catch (error) {
+        alert('❌ Error: ' + error.message);
+      }
     }
 
-    function changeChartType(type) {
-      currentChartType = type;
-      document.querySelectorAll('.chart-type-btn').forEach(btn => {
-        if (btn.dataset.type === type) {
-          btn.className = 'chart-type-btn px-4 py-2 rounded-lg font-semibold bg-green-600 text-white';
+    async function sellStock() {
+      const ticker = document.getElementById('portfolioTicker').value.trim().toUpperCase();
+      const price = parseFloat(document.getElementById('portfolioPrice').value);
+      const shares = parseInt(document.getElementById('portfolioShares').value);
+
+      if (!ticker || !price || !shares) {
+        alert('Please fill in all fields');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_URL}/portfolio/sell`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ticker, price, shares })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          alert('✅ ' + data.message);
+          updatePortfolioStatus();
         } else {
-          btn.className = 'chart-type-btn px-4 py-2 rounded-lg font-semibold bg-gray-700 text-gray-300 hover:bg-gray-600';
+          alert('❌ Error: ' + data.error);
         }
-      });
-      createPriceChart();
+      } catch (error) {
+        alert('❌ Error: ' + error.message);
+      }
     }
 
-    // Initialize charts
-    createPriceChart();
-    createVolumeChart();
+    // Initialize portfolio status on page load
+    updatePortfolioStatus();
   </script>
 </body>
 
