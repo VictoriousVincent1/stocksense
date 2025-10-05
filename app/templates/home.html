@@ -26,35 +26,49 @@
   </style>
 </head>
 
-<body class="bg-gradient-to-br from-blue-900 via-blue-800 to-blue-700 min-h-screen flex items-center justify-center">
 
-  <div
-    class="bg-gray-800 rounded-3xl shadow-2xl p-12 max-w-2xl w-full text-center border border-gray-700 animate-fadeScaleIn">
-    {% if session %}
-    <h1 class="text-4xl font-extrabold text-white mb-8">Welcome, {{session.userinfo.name}}!</h1>
-    <p class="mb-6">
-      <a href="/playSpace"
-        class="inline-block px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl transition-all transform hover:scale-105">
-        📈 Go to StockTrading
-      </a>
-    </p>
-    <p>
-      <a href="/logout"
-        class="inline-block px-8 py-4 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl transition-all transform hover:scale-105">
-        Logout
-      </a>
-    </p>
-    {% else %}
-    <h1 class="text-4xl font-extrabold text-white mb-8">Welcome, Guest</h1>
-    <p>
-      <a href="/login"
-        class="inline-block px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-all transform hover:scale-105">
-        🔑 Login
-      </a>
-    </p>
-    {% endif %}
+<body class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 min-h-screen">
+  <!-- Navbar -->
+  <nav class="bg-gray-900 border-b border-gray-700 py-4 px-8 flex justify-between items-center">
+    <div class="flex items-center gap-2">
+      <span class="text-3xl font-bold text-white">📈 StockSense AI</span>
+    </div>
+    <div class="flex items-center gap-4">
+      {% if session %}
+        <span class="text-white font-semibold">Hello, {{session.userinfo.name}}</span>
+        <a href="/logout" class="px-5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl font-semibold transition-all">Logout</a>
+      {% else %}
+        <a href="/login" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition-all">Login</a>
+        <a href="/signup" class="px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl font-semibold transition-all">Sign Up</a>
+      {% endif %}
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="flex flex-col items-center justify-center py-16 px-4">
+    <div class="bg-gray-800 rounded-3xl shadow-2xl p-12 max-w-2xl w-full text-center border border-gray-700 animate-fadeScaleIn mb-10">
+      <h1 class="text-4xl font-extrabold text-white mb-6">Insight Stock Trading for Beginners</h1>
+      <p class="text-lg text-gray-300 mb-8">Welcome to StockSense AI, your guide to smart stock trading. Whether you're just starting or looking to sharpen your skills, our platform offers easy-to-understand insights, real-time data, and a supportive community to help you succeed.</p>
+      <ul class="text-left text-gray-200 mb-8 space-y-3">
+        <li>✅ Learn the basics of stock trading step-by-step</li>
+        <li>✅ Get AI-powered recommendations and market analysis</li>
+        <li>✅ Practice trading in a risk-free environment</li>
+        <li>✅ Track your progress and improve your strategy</li>
+      </ul>
+      {% if session %}
+        <a href="/playSpace" class="inline-block px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl transition-all transform hover:scale-105 mb-4">📈 Go to StockTrading</a>
+      {% else %}
+        <a href="/login" class="inline-block px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-all transform hover:scale-105 mb-4">🔑 Login to Start Trading</a>
+      {% endif %}
+    </div>
+    <div class="max-w-xl w-full bg-gray-900 rounded-2xl p-8 shadow-lg border border-gray-700">
+      <h2 class="text-2xl font-bold text-white mb-4">Why Choose StockSense AI?</h2>
+      <p class="text-gray-300 mb-4">Our mission is to make stock trading accessible and insightful for everyone. We provide beginner-friendly resources, expert tips, and a platform to learn and grow as a trader.</p>
+      <p class="text-gray-400">Ready to start your journey? Sign up and join our community today!</p>
+    </div>
   </div>
-
 </body>
 
 </html>
+message.txt
+4 KB
