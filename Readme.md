@@ -1,6 +1,7 @@
 # 📈 StockSense AI
 ![StockSense Logo](Dashboard_images/logo.png)
 
+**🎥 Watch the Demo:** [StockSense AI - YouTube](https://www.youtube.com/watch?v=V7fqIPa9M1k)
 
 StockSense AI is a modern, interactive web platform for AI-driven stock prediction, portfolio management, news sentiment analysis, and backtesting. Built for traders, students, and finance enthusiasts, it uses machine learning models (scikit-learn), yfinance, pandas, and a Flask backend.  
 
